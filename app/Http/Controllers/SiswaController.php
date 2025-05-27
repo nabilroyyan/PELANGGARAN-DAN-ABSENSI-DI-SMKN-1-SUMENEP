@@ -8,6 +8,7 @@ use App\Models\Siswa;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use App\Models\KelasSiswa;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
@@ -104,5 +105,61 @@ class SiswaController extends Controller
         $siswa->delete();
 
         return redirect()->route('siswa.index')->with('success', 'Data kelas berhasil dihapus');
+    }
+
+    public function showKelasSiswa(Request $request)
+    {
+        $tingkat = $request->get('tingkat');
+
+        $kelas = Kelas::with(['jurusan', 'kelasSiswa' => function ($q) {
+            $q->where('is_active', 'aktif')->count(); // ambil siswa yang aktif saja
+        }])
+        ->when($tingkat, function ($query) use ($tingkat) {
+            return $query->where('tingkat', $tingkat);
+        })
+        ->get();
+
+        return view('superadmin.siswa.kelassiswa', compact('kelas','tingkat'));
+    }
+
+    public function showSiswa($id)
+    {
+        $kelas = Kelas::with(['siswa', 'jurusan'])->findOrFail($id);
+
+        // Ambil siswa yang TIDAK ada di tabel kelas_siswa sama sekali
+        $siswa = Siswa::whereNotIn('id', function ($query) {
+            $query->select('id_siswa')->from('kelas_siswa');
+        })->get();
+
+        return view('superadmin.siswa.siswa', compact('kelas', 'siswa'));
+    }
+
+    public function storeSiswa(Request $request, $kelasId)
+    {
+        $request->validate([
+            'status' => 'required|in:new,naik,tidak_naik,lulus',
+            'siswa_id' => 'required|array',
+            'siswa_id.*' => 'exists:siswa,id',
+        ]);
+
+        // Ensure the kelas exists
+        $kelas = Kelas::findOrFail($kelasId);
+
+        // Insert students into kelas_siswa
+        foreach ($request->siswa_id as $siswaId) {
+            KelasSiswa::updateOrCreate(
+                [
+                    'id_kelas' => $kelasId,
+                    'id_siswa' => $siswaId,
+                ],
+                [
+                    'status' => $request->status,
+                    'is_active' => 'aktif', // Assuming 'aktif' is the default state
+                    'tahun_ajaran' => date('Y'), // or fetch from settings
+                ]
+            );
+        }
+
+        return redirect()->back()->with('success', 'Siswa berhasil ditambahkan ke kelas.');
     }
 }

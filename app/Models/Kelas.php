@@ -23,6 +23,10 @@ class Kelas extends Model
     {
         return $this->belongsTo(Jurusan::class, 'id_jurusan');
     }
+   public function kelasSiswa()
+    {
+        return $this->hasMany(KelasSiswa::class, 'id_kelas');
+    }
 
 
   // Di Model Kelas.php
@@ -32,5 +36,16 @@ class Kelas extends Model
                     ->withPivot('status','tahun_ajaran', 'is_active')
                     ->withTimestamps(); // Wajib tambahkan ini!
     }
+
+     public function bkPengampu()
+    {
+        return $this->belongsToMany(
+            User::class,
+            'bk_kelas',     // nama pivot table
+            'id_kelas',     // foreign key untuk Kelas di pivot table
+            'id_bk'         // foreign key untuk User di pivot table
+        )->withTimestamps();
+    }
+
 
 }

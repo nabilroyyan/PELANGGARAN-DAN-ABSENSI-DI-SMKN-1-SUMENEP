@@ -27,14 +27,8 @@
                         <div class="card-body">
                             <div class="row mb-3 align-items-center">
                                 <div class="col-md-6">
-                                   <form method="GET" action="{{ route('kelas.index') }}" class="mb-3">
+                                   <form method="GET" action="{{ route('showKelasSiswa') }}" class="mb-3">
                                         <div class="row">
-                                            <div class="col-md-3">
-                                                <select name="stt" class="form-control" onchange="this.form.submit()">
-                                                    <option value="aktif" {{ $stt == 'aktif' ? 'selected' : '' }}>Kelas Aktif</option>
-                                                    <option value="tidak_aktif" {{ $stt == 'tidak_aktif' ? 'selected' : '' }}>Kelas Tidak Aktif</option>
-                                                </select>
-                                            </div>
                                             <div class="col-md-3">
                                                 <select name="tingkat" class="form-control" onchange="this.form.submit()">
                                                     <option value="">Tinkat</option>
@@ -61,38 +55,24 @@
                                     <th style="width: 5%;">No</th>
                                     <th>Kelas</th>
                                     <th>Jurusan</th>
-                                    <th>Status</th>
-                                    <th>total Siswa</th>
+                                    <th>Total Siswa</th>
                                     <th>Action</th>
                                 </tr>
                                 </thead>
 
                                <tbody>
-                            @foreach($kelas as $k)
-                            <tr>
-                                <td>{{ $loop->iteration }}</td>
-                                <td>{{ $k->tingkat }}</td>
-                                <td>{{ $k->jurusan->nama_jurusan }}</td>
-                                <td>
-                                    @if($k->stt == 'aktif')
-                                        <span class="badge bg-primary">Aktif</span>
-                                    @else
-                                        <span class="badge bg-danger">Tidak Aktif</span>
-                                    @endif
-                                </td>
-                                <td>{{ $k->kelasSiswa->count() }}</td>
-                                <td>
-                                    <a href="{{ route('kelas.edit', $k->id) }}" class="btn btn-warning btn-sm">Edit</a>                                                                            
-                                    <a href="{{ route('kelas.detailSiswa', $k->id) }}" class="btn btn-success btn-sm">Detail</a>
-                                    <form action="{{ route('kelas.destroy', $k->id) }}" method="POST" class="form-delete" style="display:inline;">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                                    </form>
-                                </td>
-                            </tr>
-                            @endforeach
-                            </tbody>
+                                    @foreach($kelas as $k)
+                                    <tr>
+                                        <td>{{ $loop->iteration }}</td>
+                                        <td>{{ strtoupper($k->tingkat) }}</td>
+                                        <td>{{ $k->jurusan->nama_jurusan }}</td>
+                                        <td>{{ $k->kelasSiswa->count() }}</td>
+                                        <td>
+                                            <a href="{{ route('kelas.siswa', $k->id) }}" class="btn btn-info btn-sm">Tambah Siswa</a>                                                                              
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                    </tbody>
                             </table>
                         </div>
                     </div>
@@ -101,28 +81,8 @@
         </div>
     </div>
     @endsection
-    @push('scripts')
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-        document.querySelectorAll('.form-delete').forEach(function(form) {
-            form.addEventListener('submit', function (e) {
-                e.preventDefault(); // Cegah submit default
-
-                let confirmText = prompt(
-                    "⚠️ PERINGATAN KERAS!\n\n" +
-                    "Menghapus kelas ini juga akan menghapus seluruh riwayat siswa yang pernah berada di kelas ini!\n\n" +
-                    "Jika Anda benar-benar yakin, ketik DELETE:"
-                );
-
-                if (confirmText === 'DELETE') {
-                    form.submit(); // Submit jika benar
-                } else {
-                    alert("Penghapusan dibatalkan. Anda tidak mengetik DELETE.");
-                }
-            });
-        });
-    });
-
+ @push('scripts')
+<script>
     $(document).ready(function() {
         $('#tablekelas').DataTable({
             responsive: true,
@@ -131,11 +91,28 @@
             info: true,
             ordering: true,
             columnDefs: [{
-                targets: [4], // kolom ke-5 (action), ubah ke 4 karena hanya ada 5 kolom
+                targets: [4], // kolom Action tidak bisa diurutkan
                 orderable: false
             }]
         });
-    });
 
-    </script>
-    @endpush
+        // Konfirmasi penghapusan kelas
+        document.querySelectorAll('.form-delete').forEach(function(form) {
+            form.addEventListener('submit', function (e) {
+                e.preventDefault();
+                let confirmText = prompt(
+                    "⚠️ PERINGATAN KERAS!\n\n" +
+                    "Menghapus kelas ini juga akan menghapus seluruh riwayat siswa yang pernah berada di kelas ini!\n\n" +
+                    "Jika Anda benar-benar yakin, ketik DELETE:"
+                );
+                if (confirmText === 'DELETE') {
+                    form.submit();
+                } else {
+                    alert("Penghapusan dibatalkan. Anda tidak mengetik DELETE.");
+                }
+            });
+        });
+    });
+</script>
+@endpush
+

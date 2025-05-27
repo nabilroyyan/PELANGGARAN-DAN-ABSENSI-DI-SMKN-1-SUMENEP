@@ -99,47 +99,6 @@ class KelasController extends Controller
     }
 
 
-    public function showSiswa($id)
-    {
-        $kelas = Kelas::with(['siswa', 'jurusan'])->findOrFail($id);
-
-        // Ambil siswa yang TIDAK ada di tabel kelas_siswa sama sekali
-        $siswa = Siswa::whereNotIn('id', function ($query) {
-            $query->select('id_siswa')->from('kelas_siswa');
-        })->get();
-
-        return view('superadmin.kelas.siswa', compact('kelas', 'siswa'));
-    }
-
-    public function storeSiswa(Request $request, $kelasId)
-    {
-        $request->validate([
-            'status' => 'required|in:new,naik,tidak_naik,lulus',
-            'siswa_id' => 'required|array',
-            'siswa_id.*' => 'exists:siswa,id',
-        ]);
-
-        // Ensure the kelas exists
-        $kelas = Kelas::findOrFail($kelasId);
-
-        // Insert students into kelas_siswa
-        foreach ($request->siswa_id as $siswaId) {
-            KelasSiswa::updateOrCreate(
-                [
-                    'id_kelas' => $kelasId,
-                    'id_siswa' => $siswaId,
-                ],
-                [
-                    'status' => $request->status,
-                    'is_active' => 'aktif', // Assuming 'aktif' is the default state
-                    'tahun_ajaran' => date('Y'), // or fetch from settings
-                ]
-            );
-        }
-
-        return redirect()->back()->with('success', 'Siswa berhasil ditambahkan ke kelas.');
-    }
-
    // KelasController.php
 
    public function naikkanBulkSiswa(Request $request)

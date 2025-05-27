@@ -39,7 +39,15 @@ class PelanggaranController extends Controller
         $request->validate([
             'id_siswa' => 'required|exists:siswa,id',
             'ket_pelanggaran' => 'required',
-            'tanggal' => 'required|date',
+            'tanggal' => [
+                'required',
+                'date',
+                function ($attribute, $value, $fail) {
+                    if ($value > now()->toDateString()) {
+                        $fail('Tanggal pelanggaran tidak boleh di masa depan.');
+                    }
+                }
+            ],
             'id_skor_pelanggaran' => 'required|exists:skor_pelanggaran,id',
             'bukti_pelanggaran' => 'nullable|image|mimes:jpeg,png,jpg|max:2048'
         ]);

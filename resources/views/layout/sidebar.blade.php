@@ -19,12 +19,18 @@
                 <li class="menu-title" key="t-apps">Data Master</li>
 
                 <li>
-                    <a href="{{ url('/siswa') }}" class="">
+                    <a href="javascript: void(0);" class="has-arrow waves-effect">
                         <i class="bx bx-detail"></i>
-                        <span key="t-dashboards">siswa</span>
+                        <span key="t-crypto">Siswa</span>
                     </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li><a href="{{ url('/siswa') }}" key="t-wallet">Data Siswa</a></li>
+                        <li><a href="{{ route('showKelasSiswa') }}" key="t-buy">Kelas - Siswa</a></li>
+                    </ul>
                 </li>
-                  <li>
+
+
+                <li>
                     <a href="{{ url('/jurusan') }}" class="">
                         <i class="bx bx-detail"></i>
                         <span key="t-dashboards">jurusan</span>
@@ -54,7 +60,7 @@
                 <li>
                     <a href="{{ url('/pelanggaran') }}" class="waves-effect">
                         <i class="bx bx-chat"></i>
-                        <span key="t-chat">pelanggaran</span>
+                        <span key="t-chat">Catatan pelanggaran</span>
                     </a>
                 </li>
 
@@ -67,28 +73,22 @@
 
                 <li class="menu-title" key="t-apps">Absensi</li>
 
+
                  <li>
-                    <a href="{{ url('') }}" class="waves-effect">
+                    <a href="{{ url('/bk') }}" class="waves-effect">
                         <i class="bx bx-store"></i>
-                        <span key="t-ecommerce">Absensi</span>
+                        <span key="t-ecommerce">Bimbingan Konseling</span>
                     </a>
                 </li>
-
 
                 <li>
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
                         <i class="bx bx-store"></i>
-                        <span key="t-ecommerce">Ecommerce</span>
+                        <span key="t-ecommerce">Catatan Absensi</span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
-                        <li><a href="ecommerce-products.html" key="t-products">Products</a></li>
-                        <li><a href="ecommerce-product-detail.html" key="t-product-detail">Product Detail</a></li>
-                        <li><a href="ecommerce-orders.html" key="t-orders">Orders</a></li>
-                        <li><a href="ecommerce-customers.html" key="t-customers">Customers</a></li>
-                        <li><a href="ecommerce-cart.html" key="t-cart">Cart</a></li>
-                        <li><a href="ecommerce-checkout.html" key="t-checkout">Checkout</a></li>
-                        <li><a href="ecommerce-shops.html" key="t-shops">Shops</a></li>
-                        <li><a href="ecommerce-add-product.html" key="t-add-product">Add Product</a></li>
+                        <li><a href="ecommerce-products.html" key="t-products">Input Absensi Hari ini</a></li>
+                        <li><a href="ecommerce-product-detail.html" key="t-product-detail">Riwayat Absen Hari ini</a></li>
                     </ul>
                 </li>
 

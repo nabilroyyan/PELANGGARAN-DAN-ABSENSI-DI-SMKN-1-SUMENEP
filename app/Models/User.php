@@ -49,4 +49,14 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+      public function kelasYangDiampuBk()
+    {
+        return $this->belongsToMany(
+            Kelas::class,
+            'bk_kelas',     // nama pivot table
+            'id_bk',        // foreign key untuk User di pivot table
+            'id_kelas'      // foreign key untuk Kelas di pivot table
+        )->withTimestamps();
+    }
 }

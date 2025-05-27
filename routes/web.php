@@ -1,18 +1,20 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\BkController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\KelasController;
 use App\Http\Controllers\SiswaController;
 use App\Http\Controllers\JurusanController;
 use App\Http\Controllers\DasboardController;
-use App\Http\Controllers\KategoriTindakanController;
 use App\Http\Controllers\MonitoringPelanggaran;
-use App\Http\Controllers\MonitoringPelanggaranController;
 use App\Http\Controllers\PelanggaranController;
 use App\Http\Controllers\SkorPelanggaranController;
+use App\Http\Controllers\KategoriTindakanController;
 use App\Http\Controllers\Skor_pelanggaranController;
+use App\Http\Controllers\MonitoringPelanggaranController;
+use App\Http\Controllers\BkController as ControllersBkController;
 
     Route::middleware(['guest'])->group(function () {
         Route::get('/login', [AuthController::class, 'index'])->name('login');
@@ -41,6 +43,11 @@ use App\Http\Controllers\Skor_pelanggaranController;
             Route::get('/edit/{siswa}', [SiswaController::class, 'edit'])->name('siswa.edit');
             Route::put('/{siswa}', [SiswaController::class, 'update'])->name('siswa.update');
             Route::delete('/{id}', [SiswaController::class, 'destroy'])->name('siswa.destroy');
+            //menampilakn kelas siswa
+            Route::get('/showKelasSiswa', [SiswaController::class, 'showKelasSiswa'])->name('showKelasSiswa');
+            //tambah siswa ke kelas
+            Route::get('/kelas/{id}/siswa', [SiswaController::class, 'showSiswa'])->name('kelas.siswa');
+             Route::post('/{kelas}/siswa', [SiswaController::class, 'storeSiswa'])->name('kelas.siswa.store'); // Changed to POST
         });
 
        // Kelas Management
@@ -53,20 +60,12 @@ use App\Http\Controllers\Skor_pelanggaranController;
             Route::delete('/delete/{id}', [KelasController::class, 'destroy'])->name('kelas.destroy');
             
             // detail
-            Route::get('/kelas/{id}/siswa', [KelasController::class, 'showSiswa'])->name('kelas.siswa');
-            Route::get('/{id}/detail-siswa', [KelasController::class, 'showSiswaByKelas'])->name('kelas.detailSiswa');
-            // menampikan siswa yang belum masuk ke kelas
-            Route::post('/{kelas}/siswa', [KelasController::class, 'storeSiswa'])->name('kelas.siswa.store'); // Changed to POST
-            Route::post('/{kelas}/siswa/bulk-update', [KelasController::class, 'bulkUpdate'])->name('kelas.siswa.bulkUpdate');
-            Route::delete('/{kelas}/siswa/{siswa}', [KelasController::class, 'removeSiswa'])->name('kelas.siswa.remove');
 
-            // Tambah siswa ke kelas
-            Route::get('/kelas/{id}/tambah-siswa', [KelasController::class, 'tambahSiswa'])->name('kelas.tambahSiswa');
-            Route::post('/kelas/{id}/tambah-siswa', [KelasController::class, 'simpanSiswa'])->name('kelas.simpanSiswa');
+            Route::get('/{id}/detail-siswa', [KelasController::class, 'showSiswaByKelas'])->name('kelas.detailSiswa');
+
             // Naikkan siswa secara bulk (multiple)
             Route::post('/kelas/naikkan-bulk-siswa', [KelasController::class, 'naikkanBulkSiswa'])->name('kelas.naikkanBulkSiswa');
             Route::delete('/kelas/hapus-siswa/{id}', [KelasController::class, 'hapusSiswa'])->name('kelas.hapusSiswa');
-
 
         });
 
@@ -100,6 +99,13 @@ use App\Http\Controllers\Skor_pelanggaranController;
             Route::get('/create', [KategoriTindakanController::class, 'create'])->name('kategori-tindakan.create');
             Route::post('/store', [KategoriTindakanController::class, 'store'])->name('kategori-tindakan.store');
             Route::delete('/delete/{id}', [KategoriTindakanController::class, 'destroy'])->name('kategori-tindakan.destroy');
+        });
+
+        Route::prefix('bk')->group(function () {
+            Route::get('/', [BkController::class, 'index'])->name('bk.index');
+            Route::post('/assign', [BkController::class, 'assign'])->name('bk.assign');
+            Route::get('/unassign/{bkId}/{kelasId}', [BkController::class, 'unassign'])->name('bk.unassign');
+             Route::get('/unassign-all/{bkId}', [BkController::class, 'unassignAll'])->name('bk.unassign.all');
         });
 
 

@@ -29,7 +29,7 @@
                             @csrf
                             <div class="row mb-3">
                                 <div class="col-md-2">
-                                    <a href="{{ url('/kelas') }}" class="btn btn-secondary w-100">
+                                    <a href="{{ route('showKelasSiswa') }}" class="btn btn-secondary w-100">
                                         <i class="bi bi-arrow-left"></i> Kembali
                                     </a>
                                 </div>
