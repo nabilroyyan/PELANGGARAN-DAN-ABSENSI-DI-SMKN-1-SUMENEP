@@ -87,9 +87,10 @@
                         <span key="t-ecommerce">Catatan Absensi</span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
-                        <li><a href="ecommerce-products.html" key="t-products">Input Absensi Hari ini</a></li>
-                        <li><a href="ecommerce-product-detail.html" key="t-product-detail">Riwayat Absen Hari ini</a></li>
+                        <li><a href="{{ route('absensi.create') }}" key="t-products">Input Absensi Hari ini</a></li>
+                        <li><a href="{{ route('absensi.riwayat') }}" key="t-product-detail">Riwayat Absen Hari ini</a></li>
                     </ul>
+
                 </li>
 
                 <li>

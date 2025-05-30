@@ -55,4 +55,9 @@ class KelasSiswa extends Model
     {
         return $query->where('status', $status);
     }
+
+        public function absensi()
+    {
+        return $this->hasMany(Absensi::class, 'kelas_siswa_id');
+    }
 }

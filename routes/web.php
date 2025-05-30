@@ -6,6 +6,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\KelasController;
 use App\Http\Controllers\SiswaController;
+use App\Http\Controllers\AbsensiController;
 use App\Http\Controllers\JurusanController;
 use App\Http\Controllers\DasboardController;
 use App\Http\Controllers\MonitoringPelanggaran;
@@ -106,6 +107,12 @@ use App\Http\Controllers\BkController as ControllersBkController;
             Route::post('/assign', [BkController::class, 'assign'])->name('bk.assign');
             Route::get('/unassign/{bkId}/{kelasId}', [BkController::class, 'unassign'])->name('bk.unassign');
              Route::get('/unassign-all/{bkId}', [BkController::class, 'unassignAll'])->name('bk.unassign.all');
+        });
+       
+        Route::prefix('superadmin/absensi')->group(function () {
+            Route::get('/create', [AbsensiController::class, 'create'])->name('absensi.create');
+            Route::post('/store', [AbsensiController::class, 'store'])->name('absensi.store');
+            Route::get('/riwayat', [AbsensiController::class, 'riwayatHariIni'])->name('absensi.riwayat');
         });
 
 
