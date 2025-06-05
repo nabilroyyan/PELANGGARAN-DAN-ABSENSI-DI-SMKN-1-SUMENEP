@@ -39,12 +39,6 @@
                                             </div>
                                         </div>
                                     </form>
-
-                                </div>
-                                <div class="col-md-6 text-end">
-                                    <a href="/kelas/create" class="btn btn-primary btn-rounded waves-effect waves-light">
-                                        <i class="mdi mdi-plus me-1"></i> Tambah Data Kelas
-                                    </a>
                                 </div>
                             </div>
                             
@@ -68,7 +62,9 @@
                                         <td>{{ $k->jurusan->nama_jurusan }}</td>
                                         <td>{{ $k->kelasSiswa->count() }}</td>
                                         <td>
+                                            @can('tambah kelas-siswa')
                                             <a href="{{ route('kelas.siswa', $k->id) }}" class="btn btn-info btn-sm">Tambah Siswa</a>                                                                              
+                                            @endcan
                                         </td>
                                     </tr>
                                     @endforeach

@@ -25,6 +25,9 @@
                         
                         <div class="card-body">
                             <div class="d-flex justify-content-end mb-3">
+                                @can('tambah skor-pelanggaran')
+                                    
+                                @endcan
                                 <a href="/skor-pelanggaran/create" class="btn btn-primary btn-rounded waves-effect waves-light">
                                     <i class="mdi mdi-plus me-1"> Tambah Skor Pelanggaran </i>
                                 </a>
@@ -50,6 +53,9 @@
                                     <td>{{ $pelanggaran->skor }}</td>
                                     <td>{{ ucfirst($pelanggaran->jenis_pelanggaran) }}</td>
                                     <td>
+                                        @can('hapus skor-pelanggaran')
+                                            
+                                        @endcan
                                         <form action="{{ route('skor-Pelanggaran.destroy', $pelanggaran->id) }}" method="POST" style="display:inline;">
                                             @csrf
                                             @method('DELETE')

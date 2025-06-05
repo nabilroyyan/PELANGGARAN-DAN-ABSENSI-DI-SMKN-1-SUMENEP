@@ -31,7 +31,9 @@ class AuthController extends Controller
             if ($user->hasRole('superadmin')) {
                 return redirect()->intended('/superadmin/dashboard'); // Route untuk superadmin
             } elseif ($user->hasRole('tatip')) {
-                return redirect()->intended('/tatip'); // Route untuk guru
+                return redirect()->intended('/superadmin/dashboard'); // Route untuk guru
+            } elseif ($user->hasRole('bk')) {
+                return redirect()->intended('/superadmin/dashboard'); // Route untuk guru
             } else {
                 Auth::logout(); // kalau tidak punya role
                 return redirect('/login')->withErrors(['email' => 'email tidak dikenali.']);

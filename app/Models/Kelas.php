@@ -47,5 +47,10 @@ class Kelas extends Model
         )->withTimestamps();
     }
 
+        public function bk()
+    {
+        return $this->hasMany(BkKelas::class, 'id_kelas');
+    }
+
 
 }

@@ -9,89 +9,148 @@
             <ul class="metismenu list-unstyled" id="side-menu">
                 <li class="menu-title" key="t-menu">Menu</li>
 
+                @can('view dashboard')
                 <li>
                     <a href="{{ url('superadmin/dashboard') }}" class="">
                         <i class="bx bx-home-circle"></i>
                         <span key="t-dashboards">Dashboards</span>
                     </a>
                 </li>
+                @endcan
 
                 <li class="menu-title" key="t-apps">Data Master</li>
 
+                @can('view siswa')
                 <li>
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
                         <i class="bx bx-detail"></i>
                         <span key="t-crypto">Siswa</span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
+                        @can('view data-siswa')                           
                         <li><a href="{{ url('/siswa') }}" key="t-wallet">Data Siswa</a></li>
+                        @endcan
+                        @can('view kelas-siswa')
                         <li><a href="{{ route('showKelasSiswa') }}" key="t-buy">Kelas - Siswa</a></li>
+                        @endcan
                     </ul>
                 </li>
+                @endcan
 
-
+                @can('view jurusan')
                 <li>
                     <a href="{{ url('/jurusan') }}" class="">
                         <i class="bx bx-detail"></i>
                         <span key="t-dashboards">jurusan</span>
                     </a>
                 </li>
+                @endcan
+
+                @can('view kelas')
                 <li>
                     <a href="{{ url('/kelas') }}" class="">
                         <i class="bx bx-detail"></i>
                         <span key="t-dashboards">kelas</span>
                     </a>
                 </li>
-                <li class="menu-title" key="t-apps">Pelanggaran</li>
-                
-                <li>
-                    <a href="{{ url('/skor-pelanggaran') }}" class="waves-effect">
-                        <i class="bx bx-file"></i>
-                        <span key="t-file-manager">Skor Pelanggaran</span>
-                    </a>
-                </li>
-                
-                <li>
-                    <a href="{{ url ('/kategori-tindakan') }}" class="waves-effect">
-                        <i class="bx bx-store"></i>
-                        <span key="t-store">Kategori Tindakan</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ url('/pelanggaran') }}" class="waves-effect">
-                        <i class="bx bx-chat"></i>
-                        <span key="t-chat">Catatan pelanggaran</span>
-                    </a>
-                </li>
+                @endcan
 
-                <li>
-                    <a href="{{ url('/monitoring-pelanggaran') }}" class="waves-effect">
-                        <i class="bx bx-store"></i>
-                        <span key="t-ecommerce">Monitoring-pelanggaran</span>
-                    </a>
-                </li>
-
-                <li class="menu-title" key="t-apps">Absensi</li>
-
-
+                @can('view bk')
                  <li>
                     <a href="{{ url('/bk') }}" class="waves-effect">
                         <i class="bx bx-store"></i>
                         <span key="t-ecommerce">Bimbingan Konseling</span>
                     </a>
                 </li>
+                @endcan
 
+                <li class="menu-title" key="t-apps">Pelanggaran</li>
+
+                @can('view skor-pelanggaran')
+                <li>
+                    <a href="{{ url('/skor-pelanggaran') }}" class="waves-effect">
+                        <i class="bx bx-file"></i>
+                        <span key="t-file-manager">Skor Pelanggaran</span>
+                    </a>
+                </li>
+                @endcan
+
+                @can('view kategori-tindakan')
+                <li>
+                    <a href="{{ url ('/kategori-tindakan') }}" class="waves-effect">
+                        <i class="bx bx-store"></i>
+                        <span key="t-store">Kategori Tindakan</span>
+                    </a>
+                </li>
+                @endcan
+
+                @can('view pelanggaran')
+                <li>
+                    <a href="{{ url('/pelanggaran') }}" class="waves-effect">
+                        <i class="bx bx-chat"></i>
+                        <span key="t-chat">Catatan pelanggaran</span>
+                    </a>
+                </li>
+                @endcan
+
+                @can('view monitoring-pelanggaran')
+                <li>
+                    <a href="{{ url('/monitoring-pelanggaran') }}" class="waves-effect">
+                        <i class="bx bx-store"></i>
+                        <span key="t-ecommerce">Monitoring-pelanggaran</span>
+                    </a>
+                </li>
+                @endcan
+
+                <li class="menu-title" key="t-apps">Absensi</li>
+
+                @can('view catatan-absensi')
                 <li>
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
                         <i class="bx bx-store"></i>
                         <span key="t-ecommerce">Catatan Absensi</span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
-                        <li><a href="{{ route('absensi.create') }}" key="t-products">Input Absensi Hari ini</a></li>
-                        <li><a href="{{ route('absensi.riwayat') }}" key="t-product-detail">Riwayat Absen Hari ini</a></li>
+                        @can('view input-absensi')                            
+                        <li><a href="{{ route('createHariIni') }}" key="t-products">Input Absensi Hari ini</a></li>
+                        @endcan
+                        @can('view riwayat-absensi')                          
+                        <li><a href="{{ route('riwayatHariIni') }}" key="t-product-detail">Riwayat Absen Hari ini</a></li>
+                        @endcan
                     </ul>
-
                 </li>
+                @endcan
+
+                @can('view validasi surat')
+                <li>
+                    <a href="{{ route('validasi.index') }}">
+                        <i class="bx bx-check-square"></i>
+                        <span>Validasi Surat</span>
+                    </a>
+                </li>               
+                @endcan
+
+                 <li class="menu-title" key="t-apps">User Management</li>
+
+                @can('view user')
+                 <li>
+                    <a href="{{ url('/users') }}" class="waves-effect">
+                        <i class="bx bx-user-circle"></i>
+                        <span key="t-ecommerce">Users</span>
+                    </a>
+                </li>
+                @endcan
+
+                @can('view role')
+                    <li>
+                        <a href="/role" class=" waves-effect">
+                            <i class="bx bx-briefcase-alt-2"></i>
+                            <span key="t-projects">Role</span>
+                        </a>
+                    </li>
+                @endcan
+
+                
 
                 <li>
                     <a href="javascript: void(0);" class="has-arrow waves-effect">

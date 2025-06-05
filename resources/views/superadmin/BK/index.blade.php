@@ -1,10 +1,12 @@
 @extends('layout.MainLayout')
 
 @section('content')
+<div class="page-content">
 <div class="container-fluid">
     <h1 class="h3 mb-2">Manajemen BK & Kelas</h1>
 
     <!-- Form Assign BK -->
+    @can('assign bk')
     <div class="card shadow mb-4">
         <div class="card-header py-3">
             <h6 class="m-0 font-weight-bold text-primary">Assign BK ke Kelas</h6>
@@ -145,6 +147,8 @@
             </form>
         </div>
     </div>
+    @endcan
+                
 
     <!-- Daftar Assign BK -->
     <div class="card shadow mb-4">
@@ -267,6 +271,7 @@
             </div>
         </div>
     </div>
+</div>
 </div>
 @endsection
 

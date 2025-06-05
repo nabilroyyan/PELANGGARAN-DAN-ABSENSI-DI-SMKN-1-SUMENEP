@@ -24,9 +24,11 @@
                     <div class="card">
                         <div class="card-body">
                             <div class="d-flex justify-content-end mb-3">
+                                @can('tambah kategori-tindakan')                                   
                                 <a href="/kategori-tindakan/create" class="btn btn-primary btn-rounded waves-effect waves-light">
                                     <i class="mdi mdi-plus me-1"> Tambah Kategori Tindakan </i>
                                 </a>
+                                @endcan
                             </div>
                             
                             <h4 class="card-title">Table Kategori Tindakan</h4>
@@ -45,11 +47,13 @@
                                     <td>{{ $index + 1 }}</td>
                                     <td>{{ $item->nama_tindakan }}</td>
                                     <td>
+                                        @can('hapus kategori-tindakan')                                          
                                         <form action="{{ route('kategori-tindakan.destroy', $item->id) }}" method="POST" style="display:inline;">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">Delete</button>
                                         </form>
+                                        @endcan
                                     </td>
                                 </tr>
                                 @endforeach

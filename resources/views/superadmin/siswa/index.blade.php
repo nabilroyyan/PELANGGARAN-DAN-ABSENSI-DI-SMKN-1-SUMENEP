@@ -26,9 +26,11 @@
                         
                         <div class="card-body">
                             <div class="d-flex justify-content-end mb-3">
+                                @can('tambah siswa')
                                 <a href="/siswa/create" class="btn btn-primary btn-rounded waves-effect waves-light">
                                     <i class="mdi mdi-plus me-1"> Tambah Data Siswa </i>
                                 </a>
+                                @endcan
                             </div>
                             
                             <h4 class="card-title">Table Siswa</h4>
@@ -63,12 +65,16 @@
                                         <td>{{ $siswa->no_telepon }}</td>
                                         <td>{{ $siswa->tahun_masuk }}</td>
                                         <td>
+                                            @can('edit siswa')
                                             <a href="{{ route('siswa.edit', $siswa->id) }}" class="btn btn-warning btn-sm">Edit</a>
+                                            @endcan
+                                            @can('hapus siswa')                                              
                                             <form action="{{ route('siswa.destroy', $siswa->id) }}" method="POST" style="display:inline;">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Apakah Anda yakin ingin menghapus?')">Delete</button>
                                             </form>
+                                            @endcan
                                         </td>
                                     </tr>
                                     @endforeach

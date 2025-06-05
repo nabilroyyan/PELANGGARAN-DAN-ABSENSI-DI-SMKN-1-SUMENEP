@@ -34,19 +34,23 @@
                             </a>
                             
                             <div class="d-flex align-items-center">
+                                @can('naik kelas')           
                                 <button type="button" class="btn btn-primary me-2" id="openBulkPromoteModal">Naikkan Siswa Terpilih</button>
                                 <span id="selectedCount" class="badge bg-primary">0 dipilih</span>
+                                @endcan
                             </div>
                         </div>
                         
                         <div class="table-responsive">
-                        <h4 class="card-title">Table Pelanggaran</h4>
+                        <h4 class="card-title">Table Siswa di Kelas</h4>
                             <table id="datatable" class="table table-bordered dt-responsive nowrap w-100">
                                 <thead>
                                     <tr>
+                                        @can('naik kelas')                                          
                                         <th width="50px" class="text-center">
                                             <input type="checkbox" id="select_all_ids">
                                         </th>
+                                        @endcan
                                         <th>No</th>
                                         <th>NISN</th>
                                         <th>Nama Siswa</th>
@@ -59,10 +63,12 @@
                                 <tbody>
                                     @foreach($siswaDiKelas as $index => $item)
                                     <tr>
+                                        @can('naik kelas')                                           
                                         <td class="text-center">
-                                        <input type="checkbox" name="ids" class="checkbox_ids" 
+                                            <input type="checkbox" name="ids" class="checkbox_ids" 
                                             value="{{ $item->siswa->id }}" data-kelas-siswa-id="{{ $item->id }}">
                                         </td>
+                                        @endcan
                                         <td>{{ $index + 1 }}</td>
                                         <td>{{ $item->siswa->nis_nip }}</td>
                                         <td>{{ $item->siswa->nama_siswa }}</td>
@@ -78,14 +84,16 @@
                                         <td>{{ $item->created_at->format('d/m/Y') }}</td>
                                         <td>
                                             <div class="d-flex gap-1">
+                                                @can('hapus-siswa kelas')                      
                                                 <form action="{{ route('kelas.hapusSiswa', $item->id) }}" method="POST" 
-                                                      onsubmit="return confirm('Yakin ingin menghapus siswa ini dari kelas?')">
+                                                    onsubmit="return confirm('Yakin ingin menghapus siswa ini dari kelas?')">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" class="btn btn-sm btn-danger">
                                                         Hapus
                                                     </button>
                                                 </form>
+                                                @endcan
                                             </div>
                                         </td>
                                     </tr>
