@@ -25,32 +25,20 @@ class KelasSiswa extends Model
         'tahun_ajaran'
     ];
 
-    /**
-     * Kolom yang harus di-cast
-     */
     protected $casts = [
         'status' => 'string',
     ];
 
-    /**
-     * Relasi ke model Siswa
-     */
     public function siswa()
     {
         return $this->belongsTo(Siswa::class, 'id_siswa');
     }
 
-    /**
-     * Relasi ke model Kelas
-     */
     public function kelas()
     {
         return $this->belongsTo(Kelas::class, 'id_kelas');
     }
 
-    /**
-     * Scope untuk filter status
-     */
     public function scopeStatus($query, $status)
     {
         return $query->where('status', $status);
