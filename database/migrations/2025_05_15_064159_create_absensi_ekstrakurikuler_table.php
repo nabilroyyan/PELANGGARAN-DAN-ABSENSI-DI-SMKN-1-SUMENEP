@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('absensi_ekstrakurikuler', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('pendaftaran_id')->constrained('pendaftaran')->onDelete('cascade');
             $table->foreignId('sesi_absen_ekstrakurikuler_id')->constrained('sesi_absen_ekstrakurikuler')->onDelete('cascade');
-            $table->enum('status', ['hadir', 'alpa', 'izin', 'sakit']);
+            $table->foreignId('pendaftaran_id')->constrained('pendaftaran')->onDelete('cascade');
+            $table->enum('status', ['hadir', 'izin', 'sakit', 'alpa']);
             $table->text('catatan')->nullable();
             $table->timestamps();
         });

@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('notif_pendaftaran', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('id_users')->constrained('users'); // pengirim
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->unsignedBigInteger('receiver_id');
             $table->string('title');
             $table->text('message');

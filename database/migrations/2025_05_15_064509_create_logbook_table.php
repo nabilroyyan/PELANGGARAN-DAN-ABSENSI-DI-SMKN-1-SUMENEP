@@ -16,7 +16,7 @@ return new class extends Migration
             $table->text('kegiatan');
             $table->date('tanggal');
             $table->foreignId('ekstrakurikuler_id')->constrained('ekstrakurikuler')->onDelete('cascade');
-            $table->foreignId('users_id')->constrained('users')->onDelete('cascade'); // petugas
+            $table->foreignId('users_id')->constrained('users')->onDelete('cascade');
             $table->time('jam_mulai');
             $table->time('jam_selesai');
             $table->string('foto_kegiatan')->nullable();
