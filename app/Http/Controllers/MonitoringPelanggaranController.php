@@ -15,9 +15,19 @@ use Illuminate\Support\Facades\Log;
 
 class MonitoringPelanggaranController extends Controller
 {
-    public function index(Request $request){
+    public function index(Request $request)
+    {
         $kategoriTindakan = KategoriTindakan::all();
-        $query = Pelanggaran::with(['siswa','kelasSiswa.kelas.jurusan', 'skor_pelanggaran', 'petugas']);
+
+        $query = Pelanggaran::with([
+            'siswa',
+            'kelasSiswa.kelas.jurusan',
+            'skor_pelanggaran',
+            'petugas'
+        ])
+        ->whereHas('kelasSiswa', function ($q) {
+            $q->where('is_active', 'aktif');
+        });
 
         // Filter berdasarkan nama siswa
         if ($request->filled('nama_siswa')) {
@@ -42,8 +52,9 @@ class MonitoringPelanggaranController extends Controller
 
         // Filter berdasarkan tanggal
         if ($request->filled('tanggal')) {
-        $query->whereDate('tanggal', \Carbon\Carbon::parse($request->tanggal));
+            $query->whereDate('tanggal', \Carbon\Carbon::parse($request->tanggal));
         }
+
         // Filter berdasarkan bulan
         if ($request->filled('bulan')) {
             $query->whereMonth('tanggal', $request->bulan);
@@ -56,13 +67,13 @@ class MonitoringPelanggaranController extends Controller
 
         // Eksekusi query
         $pelanggaran = $query->orderBy('tanggal', 'desc')->get();
-        
+
         // Group data per siswa untuk tampilan
         $siswaPelanggar = $pelanggaran->groupBy('id_siswa')->map(function ($items, $id_siswa) {
             $firstItem = $items->first();
             return [
                 'siswa' => $firstItem->siswa,
-                'kelas' => $firstItem->kelasSiswa->kelas ?? null,
+                'kelas_siswa' => $firstItem->kelasSiswa,
                 'jumlah_pelanggaran' => $items->count(),
                 'total_skor' => $items->sum(function($item) {
                     return $item->skor_pelanggaran->skor ?? 0;
@@ -71,52 +82,34 @@ class MonitoringPelanggaranController extends Controller
             ];
         })->sortByDesc('total_skor');
 
-        // Manual pagination
-        $currentPage = request()->get('page', 1);
-        $perPage = 10;
-        $total = $siswaPelanggar->count();
-        $offset = ($currentPage - 1) * $perPage;
-        
-        $siswaPelanggarPaginated = $siswaPelanggar->slice($offset, $perPage)->values();
-        
-        // Create paginator
-        $paginator = new \Illuminate\Pagination\LengthAwarePaginator(
-            $siswaPelanggarPaginated,
-            $total,
-            $perPage,
-            $currentPage,
-            [
-                'path' => request()->url(),
-                'pageName' => 'page',
-            ]
-        );
-        $paginator->appends(request()->query());
-
-        // Data lainnya
         $siswaList = Siswa::all();
         $kelasList = Kelas::all();
         $skorList = skor_pelanggaran::all();
 
-        // Hitung total skor per siswa dari semua data
         $totalSkor = $siswaPelanggar->pluck('total_skor', 'siswa.id');
 
-        
-        // Siswa yang mendapat peringatan (skor >= 1000)
+        // Ambil siswa yang total skornya >= 1000
         $siswaWithWarning = $siswaPelanggar->filter(function($data) {
             return $data['total_skor'] >= 1000;
         });
-        
+
         $siswaPeringatan = $siswaWithWarning->map(function($data) {
             return $data['siswa'];
         })->values();
 
         return view('superadmin/monitoring-pelanggaran.index', compact(
-            'pelanggaran','kategoriTindakan', 'siswaPelanggar', 'paginator', 'siswaList', 'kelasList', 'skorList', 'totalSkor', 'siswaPeringatan'
+            'pelanggaran',
+            'kategoriTindakan',
+            'siswaPelanggar',
+            'siswaList',
+            'kelasList',
+            'skorList',
+            'totalSkor',
+            'siswaPeringatan'
         ));
-        
     }
 
-   public function getDetail($id)
+    public function getDetail($id)
 {
     $siswa = Siswa::with([
         'pelanggarans.skor_pelanggaran',

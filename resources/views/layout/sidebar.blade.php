@@ -93,6 +93,13 @@
                 </li>
                 @endcan
 
+                 <li>
+                    <a href="{{ url('/tindakan-siswa') }}" class="waves-effect">
+                        <i class="bx bx-chat"></i>
+                        <span key="t-chat">Tindakan Siswa</span>
+                    </a>
+                </li>
+
                 @can('view monitoring-pelanggaran')
                 <li>
                     <a href="{{ url('/monitoring-pelanggaran') }}" class="waves-effect">
@@ -129,6 +136,13 @@
                     </a>
                 </li>               
                 @endcan
+
+                <li>
+                    <a href="{{ url('/monitoring-absensi') }}" class="waves-effect">
+                        <i class="bx bx-store"></i>
+                        <span key="t-ecommerce">Monitoring-Absensi</span>
+                    </a>
+                </li>
 
                  <li class="menu-title" key="t-apps">User Management</li>
 

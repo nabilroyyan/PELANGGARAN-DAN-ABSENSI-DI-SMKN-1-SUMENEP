@@ -106,13 +106,13 @@
                                 <tbody>
                                     @foreach($siswaPelanggar as $id_siswa => $data)
                                     <tr>
-                                        <td>{{ $loop->iteration + (($paginator->currentPage() - 1) * $paginator->perPage()) }}</td>
+                                        <td>{{ $loop->iteration}}</td>
                                         <td>{{ $data['siswa']->nis_nip ?? 'N/A' }}</td>
                                         <td>{{ $data['siswa']->nama_siswa ?? 'N/A' }}</td>
                                         <td>
-                                            @if($data['kelas'])
-                                                {{ $data['kelas']->tingkat ?? '' }} 
-                                                {{ $data['kelas']->jurusan->nama_jurusan ?? '' }}
+                                            @if($data['kelas_siswa'] && $data['kelas_siswa']->is_active == 'aktif')
+                                                {{ $data['kelas_siswa']->kelas->tingkat ?? '' }}
+                                                {{ $data['kelas_siswa']->kelas->jurusan->nama_jurusan ?? '' }}
                                             @else
                                                 N/A
                                             @endif
@@ -140,77 +140,7 @@
                                                 data-name="{{ $data['siswa']->nama_siswa }}">
                                                 <i class="fas fa-eye"></i> Detail
                                             </button>
-                                            @if ($data['total_skor'] >= 500)
-                                            <button class="btn btn-sm btn-danger" onclick="bukaModalTindakan(this)" data-id="{{ $data['siswa']->id }}">
-                                                Ambil Tindakan
-                                            </button>
-                                            @else
-                                            <span class="btn btn-sm bg-success ">Aman</span>
-                                            @endif
                                         </td>
-                                    </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="d-flex justify-content-center mt-3">
-                            {{ $paginator->links() }}
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Peringatan Section -->
-        @if($siswaPeringatan->isNotEmpty())
-        <div class="row">
-            <div class="col-12">
-                <div class="card border-danger">
-                    <div class="card-header bg-danger text-white">
-                        <h4 class="card-title mb-0">⚠️ Siswa dengan Skor Kritis (≥ 1000)</h4>
-                    </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-bordered table-hover">
-                                <thead class="table-danger">
-                                    <tr>
-                                        <th>No</th>
-                                        <th>NIS</th>
-                                        <th>Nama Siswa</th>
-                                        <th>Kelas</th>
-                                        <th>Total Skor</th>
-                                        <th>Aksi</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach($siswaPeringatan as $key => $siswa)
-                                    <tr>
-                                        <td>{{ $key + 1 }}</td>
-                                        <td>{{ $siswa->nis_nip }}</td>
-                                        <td>{{ $siswa->nama_siswa }}</td>
-                                        <td>
-                                            @if($siswa->kelasSiswa && $siswa->kelasSiswa->kelas)
-                                               {{ $siswa->kelasSiswa->kelas->tingkat }} 
-                                                {{ $siswa->kelasSiswa->kelas->jurusan->nama_jurusan ?? '' }}
-                                            @else
-                                                N/A
-                                            @endif
-                                        </td>
-                                        <td>{{ $totalSkor[$siswa->id] ?? 0 }}</td>
-                                        <td>
-                                            <button type="button" class="btn btn-sm btn-primary btn-detail"
-                                                data-id="{{ $data['siswa']->id }}"
-                                                data-name="{{ $data['siswa']->nama_siswa }}">
-                                                <i class="fas fa-eye"></i> Detail
-                                            </button>
-                                        </td>
-                                        @if ($data['total_skor'] >= 500)
-                                        <button class="btn btn-sm btn-danger" onclick="bukaModalTindakan(this)" data-id="{{ $data['siswa']->id }}">
-                                            Ambil Tindakan
-                                        </button>
-                                        @else
-                                        <span class="badge bg-success">Aman</span>
-                                        @endif
                                     </tr>
                                     @endforeach
                                 </tbody>
@@ -220,7 +150,6 @@
                 </div>
             </div>
         </div>
-        @endif
     </div>
 </div>
 
@@ -285,131 +214,65 @@
     </div>
 </div>
 
-{{-- modal tindakan --}}
-<div class="modal fade" id="modalTindakan" tabindex="-1">
-  <div class="modal-dialog">
-    <form id="formTindakan">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Ambil Tindakan</h5>
-        </div>
-        <div class="modal-body">
-          <input type="hidden" name="id_siswa" id="id_siswa_tindakan">
-          <div class="mb-3">
-            <label for="id_tindakan" class="form-label">Kategori Tindakan</label>
-            <select name="id_tindakan" id="id_tindakan" class="form-control">
-              @foreach($kategoriTindakan as $kt)
-                <option value="{{ $kt->id }}">{{ $kt->nama_tindakan }}</option>
-              @endforeach
-            </select>
-          </div>
-          <div class="mb-3">
-            <label for="tanggal" class="form-label">Tanggal</label>
-            <input type="date" name="tanggal" class="form-control" required>
-          </div>
-          <div class="mb-3">
-            <label for="catatan" class="form-label">Catatan</label>
-            <textarea name="catatan" class="form-control"></textarea>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="submit" class="btn btn-primary">Simpan</button>
-        </div>
-      </div>
-    </form>
-  </div>
-</div>
 
 
 @endsection
 
 @section('scripts')
+<!-- Pastikan Bootstrap JS sudah di-include sebelum script ini -->
+
 <script>
-function bukaModalTindakan(button) {
-    const id = button.getAttribute('data-id');
-    document.getElementById('id_siswa_tindakan').value = id;
-    $('#modalTindakan').modal('show');
-}
+document.addEventListener('DOMContentLoaded', function() {
+    // Handler untuk tombol detail
+    document.addEventListener('click', function(e) {
+        const button = e.target.closest('.btn-detail');
+        if (button) {
+            const siswaId = button.getAttribute('data-id');
+            const namaSiswa = button.getAttribute('data-name');
+            document.getElementById('namaSiswaModal').textContent = namaSiswa;
 
-document.getElementById('formTindakan').addEventListener('submit', function(e) {
-    e.preventDefault();
-    const formData = new FormData(this);
+            // Modal Bootstrap 5
+            const detailModal = new bootstrap.Modal(document.getElementById('detailModal'));
+            detailModal.show();
 
-    fetch("/monitoring-pelanggaran/tindakan", {
-        method: "POST",
-        headers: {
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-        },
-        body: formData
-    }).then(response => response.json())
-      .then(data => {
-          alert(data.message);
-          $('#modalTindakan').modal('hide');
-      })
-      .catch(error => {
-          alert("Gagal menyimpan tindakan");
-          console.error(error);
-      });
-});
+            document.getElementById('loadingDetail').style.display = 'block';
+            document.getElementById('detailContent').style.display = 'none';
 
-document.addEventListener('click', function(e) {
-    const button = e.target.closest('.btn-detail');
-    if (button) {
-        // Ambil data dari atribut tombol
-        const siswaId = button.getAttribute('data-id');
-        const namaSiswa = button.getAttribute('data-name');
+            fetch(`/monitoring-pelanggaran/detail/${siswaId}`)
+                .then(response => response.json())
+                .then(data => {
+                    const tableBody = document.getElementById('detailTableBody');
+                    tableBody.innerHTML = '';
 
-        // Tampilkan nama siswa di modal
-        document.getElementById('namaSiswaModal').textContent = namaSiswa;
+                    if (Array.isArray(data.pelanggarans)) {
+                        data.pelanggarans.forEach((item, index) => {
+                            const row = `<tr>
+                                <td>${index + 1}</td>
+                                <td>${item.tanggal}</td>
+                                <td>${item.nama_pelanggaran}</td>
+                                <td>${item.skor}</td>
+                                <td>${item.petugas}</td>
+                                <td>${item.bukti ? `<a href="${item.bukti}" target="_blank">Lihat</a>` : '-'}</td>
+                            </tr>`;
+                            tableBody.innerHTML += row;
+                        });
+                    } else {
+                        tableBody.innerHTML = '<tr><td colspan="6" class="text-center">Tidak ada data pelanggaran</td></tr>';
+                    }
 
-        // Tampilkan modal
-        const detailModal = new bootstrap.Modal(document.getElementById('detailModal'));
-        detailModal.show();
+                    document.getElementById('totalPelanggaran').textContent = data.total_pelanggaran ?? 0;
+                    document.getElementById('totalSkorModal').textContent = data.total_skor ?? 0;
 
-        // Tampilkan spinner loading
-        document.getElementById('loadingDetail').style.display = 'block';
-        document.getElementById('detailContent').style.display = 'none';
-
-        // Fetch data detail via AJAX
-        fetch(`/monitoring-pelanggaran/detail/${siswaId}`)
-            .then(response => response.json())
-            .then(data => {
-                // Clear table
-                const tableBody = document.getElementById('detailTableBody');
-                tableBody.innerHTML = '';
-
-                // Tambahkan baris data pelanggaran
-                if (Array.isArray(data.pelanggarans)) {
-                    data.pelanggarans.forEach((item, index) => {
-                        const row = `<tr>
-                            <td>${index + 1}</td>
-                            <td>${item.tanggal}</td>
-                            <td>${item.nama_pelanggaran}</td>
-                            <td>${item.skor}</td>
-                            <td>${item.petugas}</td>
-                            <td><a href="${item.bukti}" target="_blank">Lihat</a></td>
-                        </tr>`;
-                        tableBody.innerHTML += row;
-                    });
-                } else {
-                    console.warn('Data pelanggarans kosong atau bukan array', data.pelanggarans);
-                }
-
-
-                // Tampilkan total
-                document.getElementById('totalPelanggaran').textContent = data.total_pelanggaran;
-                document.getElementById('totalSkorModal').textContent = data.total_skor;
-
-                // Tampilkan isi modal
-                document.getElementById('loadingDetail').style.display = 'none';
-                document.getElementById('detailContent').style.display = 'block';
-            })
-            .catch(error => {
-                console.error('Gagal ambil data detail:', error);
-                alert('Gagal mengambil data detail. Coba lagi.');
-                document.getElementById('loadingDetail').style.display = 'none';
-            });
-    }
+                    document.getElementById('loadingDetail').style.display = 'none';
+                    document.getElementById('detailContent').style.display = 'block';
+                })
+                .catch(error => {
+                    console.error('Gagal ambil data detail:', error);
+                    alert('Gagal mengambil data detail. Coba lagi.');
+                    document.getElementById('loadingDetail').style.display = 'none';
+                });
+        }
+    });
 });
 </script>
 @endsection

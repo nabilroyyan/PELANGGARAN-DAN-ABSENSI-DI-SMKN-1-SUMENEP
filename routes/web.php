@@ -7,13 +7,15 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\KelasController;
 use App\Http\Controllers\SiswaController;
+use App\Http\Controllers\AbsensiController;
 use App\Http\Controllers\JurusanController;
 use App\Http\Controllers\DasboardController;
 use App\Http\Controllers\PelanggaranController;
+use App\Http\Controllers\TindakanSiswaController;
 use App\Http\Controllers\SkorPelanggaranController;
 use App\Http\Controllers\KategoriTindakanController;
+use App\Http\Controllers\MonitoringAbsensiController;
 use App\Http\Controllers\MonitoringPelanggaranController;
-use App\Http\Controllers\AbsensiController;
 
 
     Route::middleware(['guest'])->group(function () {
@@ -139,6 +141,20 @@ use App\Http\Controllers\AbsensiController;
             Route::post('/{id}', [UserController::class, 'update'])->name('users.update');
             Route::delete('/{id}', [UserController::class, 'destroy'])->name('users.destroy')->middleware('permission:hapus user');
         });
+
+        Route::prefix('tindakan-siswa')->middleware(['auth'])->group(function () {
+            Route::get('/', [TindakanSiswaController::class, 'index'])->name('tindakan-siswa.index');
+            Route::get('/create/{siswa_id}/{kelas_siswa_id}', [TindakanSiswaController::class, 'create'])->name('tindakan-siswa.create');
+            Route::post('/store', [TindakanSiswaController::class, 'store'])->name('tindakan-siswa.store');
+            Route::post('tindakan-siswa/update-status/{id}', [TindakanSiswaController::class, 'updateStatus'])->name('tindakan-siswa.updateStatus');
+
+        });
+
+         Route::prefix('monitoring-absensi')->group(function () {
+            Route::get('/', [MonitoringAbsensiController::class, 'index'])->name('monitoring-Pelanggaran.index')->middleware('permission:view monitoring-pelanggaran');
+            Route::get('/detail/{id}', [MonitoringAbsensiController::class, 'getDetail'])->name('monitoring-Pelanggaran.detail');
+        });
+
 
 
     });
