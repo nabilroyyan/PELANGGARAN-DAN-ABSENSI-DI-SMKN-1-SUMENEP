@@ -28,7 +28,7 @@ class BkController extends Controller
     public function assign(Request $request)
     {
         $request->validate([
-            'bk_id' => 'required|exists:users,id',  // sesuaikan dengan name di form
+            'bk_id' => 'required|exists:users,id', 
             'kelas_ids' => 'required|array',
             'kelas_ids.*' => 'exists:kelas,id'
         ]);
